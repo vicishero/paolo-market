@@ -97,7 +97,7 @@ const Ranking: React.FC<PageProps> = ({ lang }) => {
   };
 
   return (
-    <div className="page-container" style={{ paddingTop: 8, textAlign: 'left', minWidth: 500 }}>
+    <div className="page-container" style={{ paddingTop: 8, textAlign: 'left' }}>
       {/* 标题 */}
       <div style={{ fontSize: 20, fontWeight: 800, color: '#111827', marginBottom: 16 }}>
         {texts.title}

@@ -26,6 +26,7 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  width: 100%;
   max-width: var(--app-max-width);
   background-color: #f7f8fa;
   position: relative;

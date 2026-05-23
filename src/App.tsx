@@ -82,9 +82,9 @@ interface MarketItem {
 
 const NAV_CONFIGS = [
   { key: 'home', iconComponent: HomeIcon, labelKey: 'home' },
-  { key: 'search', iconComponent: TeamIcon, labelKey: 'search' },
-  { key: 'create', iconComponent: CreateIcon, labelKey: 'create' },
   { key: 'ranking', iconComponent: RankingIcon, labelKey: 'ranking' },
+  { key: 'create', iconComponent: CreateIcon, labelKey: 'create' },
+  { key: 'search', iconComponent: TeamIcon, labelKey: 'search' },
   { key: 'profile', iconComponent: ProfileIcon, labelKey: 'profile' },
 ];
 
