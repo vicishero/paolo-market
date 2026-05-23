@@ -515,7 +515,7 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
   };
 
   return (
-    <div className="page-container" style={{ paddingTop: 8 }}>
+    <div className="page-container" style={{ paddingTop: 8, minWidth: 468 }}>
       {/* ===== 顶部返回栏 — 左侧返回 / 右侧收藏+复制链接 ===== */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         {/* 左侧：返回按钮 */}
