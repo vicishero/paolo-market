@@ -105,7 +105,7 @@ const Profile: React.FC<PageProps> = ({ lang, walletConnected = true }) => {
 
   if (!walletConnected) {
     return (
-      <div className="page-container" style={{ paddingTop: 60, textAlign: 'center', minWidth: 468 }}>
+      <div className="page-container" style={{ paddingTop: 60, textAlign: 'center', minWidth: 500 }}>
         <div style={{ fontSize: 60, marginBottom: 24 }}>🔐</div>
         <p style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>{texts.notConnected}</p>
       </div>
@@ -113,7 +113,7 @@ const Profile: React.FC<PageProps> = ({ lang, walletConnected = true }) => {
   }
 
   return (
-    <div className="page-container" style={{ paddingTop: 8, textAlign: 'left', minWidth: 468 }}>
+    <div className="page-container" style={{ paddingTop: 8, textAlign: 'left', minWidth: 500 }}>
       {/* 用户信息区 — 头像 + 昵称 */}
       <div style={{
         display: 'flex',
