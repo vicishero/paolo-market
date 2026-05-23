@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BetModal from '../components/BetModal';
 
 /* ===== 类型定义 ===== */
 interface MarketItem {
@@ -32,6 +33,8 @@ interface ActivityItem {
   id: number;
   type: 'buy_yes' | 'buy_no' | 'sell_yes' | 'sell_no' | 'claim';
   address: string;
+  avatar: string;
+  nickname: string;
   amount: string;
   price: string;
   time: string;
@@ -168,16 +171,16 @@ const mockNoPositions: PositionItem[] = [
 
 /* ===== Mock 动态数据 ===== */
 const mockActivities: ActivityItem[] = [
-  { id: 1, type: 'buy_yes', address: '0x7a9f...3b2c', amount: '$45,200', price: '$0.78', time: '2 min ago', timestamp: Date.now() - 120000 },
-  { id: 2, type: 'sell_no', address: '0x5a3f...4b6e', amount: '$32,100', price: '$0.19', time: '5 min ago', timestamp: Date.now() - 300000 },
-  { id: 3, type: 'buy_no', address: '0x8e9d...3c2b', amount: '$28,400', price: '$0.22', time: '12 min ago', timestamp: Date.now() - 720000 },
-  { id: 4, type: 'buy_yes', address: '0x3e1d...8a4f', amount: '$61,500', price: '$0.76', time: '18 min ago', timestamp: Date.now() - 1080000 },
-  { id: 5, type: 'sell_yes', address: '0x9c2b...1f7e', amount: '$18,700', price: '$0.80', time: '25 min ago', timestamp: Date.now() - 1500000 },
-  { id: 6, type: 'buy_yes', address: '0x4f8a...6d3c', amount: '$55,000', price: '$0.74', time: '32 min ago', timestamp: Date.now() - 1920000 },
-  { id: 7, type: 'buy_no', address: '0x2d7c...8e1a', amount: '$41,200', price: '$0.21', time: '40 min ago', timestamp: Date.now() - 2400000 },
-  { id: 8, type: 'claim', address: '0x6c1a...7f5d', amount: '$22,800', price: '$1.00', time: '1 hr ago', timestamp: Date.now() - 3600000 },
-  { id: 9, type: 'buy_yes', address: '0x1b5e...2a9d', amount: '$33,600', price: '$0.72', time: '1.5 hr ago', timestamp: Date.now() - 5400000 },
-  { id: 10, type: 'sell_no', address: '0x0f4b...9e8c', amount: '$15,400', price: '$0.25', time: '2 hr ago', timestamp: Date.now() - 7200000 },
+  { id: 1, type: 'buy_yes', address: '0x7a9f...3b2c', avatar: '🐋', nickname: 'CryptoWhale', amount: '$45,200', price: '$0.78', time: '2 min ago', timestamp: Date.now() - 120000 },
+  { id: 2, type: 'sell_no', address: '0x5a3f...4b6e', avatar: '🐂', nickname: 'BullishMax', amount: '$32,100', price: '$0.19', time: '5 min ago', timestamp: Date.now() - 300000 },
+  { id: 3, type: 'buy_no', address: '0x8e9d...3c2b', avatar: '🛡️', nickname: 'RiskManager', amount: '$28,400', price: '$0.22', time: '12 min ago', timestamp: Date.now() - 720000 },
+  { id: 4, type: 'buy_yes', address: '0x3e1d...8a4f', avatar: '🔍', nickname: 'AlphaSeeker', amount: '$61,500', price: '$0.76', time: '18 min ago', timestamp: Date.now() - 1080000 },
+  { id: 5, type: 'sell_yes', address: '0x9c2b...1f7e', avatar: '🤓', nickname: 'DataNerd', amount: '$18,700', price: '$0.80', time: '25 min ago', timestamp: Date.now() - 1500000 },
+  { id: 6, type: 'buy_yes', address: '0x4f8a...6d3c', avatar: '🎰', nickname: 'DegenTrader', amount: '$55,000', price: '$0.74', time: '32 min ago', timestamp: Date.now() - 1920000 },
+  { id: 7, type: 'buy_no', address: '0x2d7c...8e1a', avatar: '📊', nickname: 'ChartMaster', amount: '$41,200', price: '$0.21', time: '40 min ago', timestamp: Date.now() - 2400000 },
+  { id: 8, type: 'claim', address: '0x6c1a...7f5d', avatar: '📰', nickname: 'NewsBot', amount: '$22,800', price: '$1.00', time: '1 hr ago', timestamp: Date.now() - 3600000 },
+  { id: 9, type: 'buy_yes', address: '0x1b5e...2a9d', avatar: '🥊', nickname: 'FOMOFighter', amount: '$33,600', price: '$0.72', time: '1.5 hr ago', timestamp: Date.now() - 5400000 },
+  { id: 10, type: 'sell_no', address: '0x0f4b...9e8c', avatar: '🦅', nickname: 'EagleEye', amount: '$15,400', price: '$0.25', time: '2 hr ago', timestamp: Date.now() - 7200000 },
 ];
 
 /* ===== 子组件：评论项 — X(Twitter)平台风格 ===== */
@@ -232,7 +235,7 @@ const CommentItemView: React.FC<{
         </div>
 
         <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
-          {/* 用户名行 — X风格: 粗体名 + 灰色@handle + · 时间 */}
+          {/* 用户名行 — 粗体名 + · 时间 */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 2, flexWrap: 'wrap' }}>
             <span style={{
               fontSize: 14,
@@ -241,13 +244,6 @@ const CommentItemView: React.FC<{
               lineHeight: '20px',
             }}>
               {comment.author}
-            </span>
-            <span style={{
-              fontSize: 14,
-              color: '#536471',
-              lineHeight: '20px',
-            }}>
-              {comment.handle}
             </span>
             <span style={{ color: '#536471', fontSize: 14 }}>·</span>
             <span style={{
@@ -258,17 +254,6 @@ const CommentItemView: React.FC<{
               {comment.time}
             </span>
           </div>
-
-          {/* 嵌套回复标注：Replying to @username */}
-          {depth > 0 && (
-            <div style={{
-              fontSize: 13,
-              color: '#536471',
-              marginBottom: 2,
-            }}>
-              {lang === 'en' ? 'Replying to' : '回复'} <span style={{ color: '#1d9bf0' }}>{comment.handle}</span>
-            </div>
-          )}
 
           {/* 评论文本 */}
           <p style={{
@@ -282,13 +267,11 @@ const CommentItemView: React.FC<{
             {comment.text}
           </p>
 
-          {/* 底部操作栏 — X风格: 图标+数字 */}
+          {/* 底部操作栏 — 居左排列 */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 4,
-            maxWidth: 320,
-            justifyContent: 'space-between',
+            gap: 12,
           }}>
             {/* Reply 按钮 */}
             <button
@@ -315,29 +298,6 @@ const CommentItemView: React.FC<{
               <span>{comment.replies.length}</span>
             </button>
 
-            {/* Repost 按钮 */}
-            <button style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 4,
-              background: 'none',
-              border: 'none',
-              color: '#536471',
-              fontSize: 13,
-              cursor: 'pointer',
-              padding: '4px 8px',
-              borderRadius: 999,
-              transition: 'all 0.15s ease',
-            }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#00ba7c'; e.currentTarget.style.backgroundColor = '#00ba7c1a'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = '#536471'; e.currentTarget.style.backgroundColor = 'transparent'; }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02 4.5 3.88zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/>
-              </svg>
-              <span>0</span>
-            </button>
-
             {/* Like 按钮 */}
             <button style={{
               display: 'inline-flex',
@@ -359,29 +319,6 @@ const CommentItemView: React.FC<{
                 <path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/>
               </svg>
               <span>{(comment.id * 7) % 100}</span>
-            </button>
-
-            {/* Views / Share */}
-            <button style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 4,
-              background: 'none',
-              border: 'none',
-              color: '#536471',
-              fontSize: 13,
-              cursor: 'pointer',
-              padding: '4px 8px',
-              borderRadius: 999,
-              transition: 'all 0.15s ease',
-            }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#1d9bf0'; e.currentTarget.style.backgroundColor = '#1d9bf01a'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = '#536471'; e.currentTarget.style.backgroundColor = 'transparent'; }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm3.027 13.198l-2.777 2.777v-5.835c0-.552.448-1 1-1s1 .448 1 1v3.421l1.777-1.777c.39-.39 1.023-.39 1.414 0s.39 1.023 0 1.414zm-6.054-2.396c0-.552.448-1 1-1s1 .448 1 1v1.973c0 .552-.448 1-1 1s-1-.448-1-1v-1.973z"/>
-              </svg>
-              <span>{(comment.id * 123) % 1000}</span>
             </button>
           </div>
 
@@ -492,6 +429,10 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
   const [activeTab, setActiveTab] = useState<'comments' | 'positions' | 'activity'>('comments');
   const [bookmarked, setBookmarked] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [infoTab, setInfoTab] = useState<'rules' | 'context'>('rules');
+  // 下注弹窗状态
+  const [betModalVisible, setBetModalVisible] = useState(false);
+  const [betSelectedSide, setBetSelectedSide] = useState<'yes' | 'no' | null>(null);
 
   // 评论回复状态
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
@@ -755,98 +696,80 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
           </div>
         </div>
 
-        {/* Rules 胶囊 */}
-        <div style={{
-          backgroundColor: '#f8fafc',
-          borderRadius: 20,
-          padding: '16px 20px',
-          marginBottom: 12,
-          textAlign: 'center',
-          border: '1px solid #e5e7eb',
-        }}>
-          <h3 style={{
-            fontSize: 13,
-            fontWeight: 700,
-            color: '#2563eb',
-            marginBottom: 10,
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
-            textAlign: 'center',
-          }}>
-            {t.rules}
-          </h3>
-          <p style={{
-            fontSize: 13,
-            color: '#4b5563',
-            lineHeight: 1.8,
-            margin: 0,
-            whiteSpace: 'pre-line',
-            textAlign: 'center',
-          }}>
-            {t.rulesText}
-          </p>
+        {/* Yes / No 操作按钮 */}
+        <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+          <button
+            onClick={() => { setBetSelectedSide('yes'); setBetModalVisible(true); }}
+            style={{
+              flex: 1,
+              backgroundColor: '#dcfce7',
+              color: '#166534',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: 16,
+              padding: '14px 16px',
+              borderRadius: 12,
+              cursor: 'pointer',
+              transition: 'opacity 0.2s ease',
+            }}>
+            {t.betYes} {market.probability}%
+          </button>
+          <button
+            onClick={() => { setBetSelectedSide('no'); setBetModalVisible(true); }}
+            style={{
+              flex: 1,
+              backgroundColor: '#fee2e2',
+              color: '#991b1b',
+              border: 'none',
+              fontWeight: 800,
+              fontSize: 16,
+              padding: '14px 16px',
+              borderRadius: 12,
+              cursor: 'pointer',
+              transition: 'opacity 0.2s ease',
+            }}>
+            {t.betNo} {100 - market.probability}%
+          </button>
         </div>
 
-        {/* Context 胶囊 */}
-        <div style={{
-          backgroundColor: '#f0fdf4',
-          borderRadius: 20,
-          padding: '16px 20px',
-          textAlign: 'center',
-          border: '1px solid #dcfce7',
-        }}>
-          <h3 style={{
-            fontSize: 13,
-            fontWeight: 700,
-            color: '#16a34a',
-            marginBottom: 10,
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px',
-            textAlign: 'center',
+        {/* Rules | Context Tab 切换 */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{
+            display: 'flex',
+            gap: 24,
+            borderBottom: '1px solid #e5e7eb',
+            marginBottom: 0,
           }}>
-            {t.background}
-          </h3>
-          <p style={{
+            {(['rules', 'context'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setInfoTab(tab)}
+                style={{
+                  padding: '10px 0',
+                  border: 'none',
+                  backgroundColor: 'transparent',
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: infoTab === tab ? '#111827' : '#9ca3af',
+                  cursor: 'pointer',
+                  borderBottom: infoTab === tab ? '2px solid #111827' : '2px solid transparent',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {tab === 'rules' ? t.rules : t.background}
+              </button>
+            ))}
+          </div>
+          <div style={{
+            padding: '14px 0',
             fontSize: 13,
             color: '#4b5563',
             lineHeight: 1.7,
-            margin: 0,
-            textAlign: 'center',
+            whiteSpace: 'pre-line',
+            textAlign: 'left',
           }}>
-            {t.backgroundText}
-          </p>
-        </div>
-
-        {/* Yes / No 操作按钮 */}
-        <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-          <button style={{
-            flex: 1,
-            backgroundColor: '#dcfce7',
-            color: '#166534',
-            border: 'none',
-            fontWeight: 800,
-            fontSize: 16,
-            padding: '14px 16px',
-            borderRadius: 12,
-            cursor: 'pointer',
-            transition: 'opacity 0.2s ease',
-          }}>
-            {t.betYes} {market.probability}%
-          </button>
-          <button style={{
-            flex: 1,
-            backgroundColor: '#fee2e2',
-            color: '#991b1b',
-            border: 'none',
-            fontWeight: 800,
-            fontSize: 16,
-            padding: '14px 16px',
-            borderRadius: 12,
-            cursor: 'pointer',
-            transition: 'opacity 0.2s ease',
-          }}>
-            {t.betNo} {100 - market.probability}%
-          </button>
+            {infoTab === 'rules' ? t.rulesText : t.backgroundText}
+          </div>
         </div>
       </div>
 
@@ -884,7 +807,7 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
 
       {/* 评论 Tab */}
       {activeTab === 'comments' && (
-        <div>
+        <div style={{ width: '100%', overflow: 'hidden' }}>
           {mockComments.length > 0 ? (
             mockComments.map((comment, idx) => (
               <CommentItemView
@@ -915,15 +838,9 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
 
       {/* 持仓 Tab */}
       {activeTab === 'positions' && (
-        <div>
+        <div style={{ width: '100%', overflow: 'hidden' }}>
           {/* YES 持仓列表 */}
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: 14,
-            padding: '16px 18px',
-            marginBottom: 16,
-            boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
-          }}>
+          <div style={{ marginBottom: 16 }}>
             <h3 style={{
               fontSize: 16,
               fontWeight: 700,
@@ -983,12 +900,7 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
           </div>
 
           {/* NO 持仓列表 */}
-          <div style={{
-            backgroundColor: '#ffffff',
-            borderRadius: 14,
-            padding: '16px 18px',
-            boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
-          }}>
+          <div>
             <h3 style={{
               fontSize: 16,
               fontWeight: 700,
@@ -1052,10 +964,7 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
       {/* 动态 Tab */}
       {activeTab === 'activity' && (
         <div style={{
-          backgroundColor: '#ffffff',
-          borderRadius: 14,
-          padding: '4px 0',
-          boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
+          width: '100%',
           overflow: 'hidden',
         }}>
           {mockActivities.length > 0 ? (
@@ -1067,48 +976,69 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '14px 18px',
+                    padding: '12px 18px',
                     borderBottom: '1px solid #f3f4f6',
-                    gap: 12,
+                    gap: 8,
+                    flexWrap: 'nowrap',
+                    whiteSpace: 'nowrap',
                   }}
                 >
+                  {/* 用户 — 头像 + 昵称 */}
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: '#111827',
+                    cursor: 'pointer',
+                    flexShrink: 0,
+                  }}>
+                    <span style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: '50%',
+                      backgroundColor: '#f3f4f6',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 12,
+                    }}>
+                      {item.avatar}
+                    </span>
+                    {item.nickname}
+                  </span>
+
                   {/* 交易类型标签 */}
                   <span style={{
                     display: 'inline-block',
-                    padding: '4px 10px',
+                    padding: '3px 8px',
                     borderRadius: 6,
                     backgroundColor: label.color + '18',
                     color: label.color,
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: 700,
                     flexShrink: 0,
-                    whiteSpace: 'nowrap',
                   }}>
                     {label[lang]}
                   </span>
 
-                  {/* 地址 + 金额 */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{
-                        fontSize: 13,
-                        fontWeight: 600,
-                        color: '#374151',
-                        fontFamily: 'monospace',
-                      }}>
-                        {item.address}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 1 }}>
-                      {item.amount} · {lang === 'en' ? 'Price' : '价格'}: {item.price}
-                    </div>
-                  </div>
+                  {/* 金额 */}
+                  <span style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: '#111827',
+                    flexShrink: 0,
+                  }}>
+                    {item.amount}
+                  </span>
 
-                  {/* 时间 */}
+                  {/* 时间 — 右对齐 */}
                   <span style={{
                     fontSize: 12,
                     color: '#9ca3af',
                     flexShrink: 0,
+                    marginLeft: 'auto',
                   }}>
                     {item.time}
                   </span>
@@ -1127,6 +1057,18 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
           )}
         </div>
       )}
+
+      {/* 下注弹窗 */}
+      <BetModal
+        visible={betModalVisible}
+        market={market}
+        selectedSide={betSelectedSide}
+        userBalance={100}
+        onClose={() => setBetModalVisible(false)}
+        onSelectSide={(side) => setBetSelectedSide(side)}
+        onBet={(amount: number) => { console.log('Bet:', amount, betSelectedSide, market.id); setBetModalVisible(false); }}
+        lang={lang}
+      />
     </div>
   );
 };

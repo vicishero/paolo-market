@@ -1,56 +1,54 @@
 import React, { useState } from 'react';
+
 interface PageProps {
   lang: 'en' | 'zh';
   walletConnected?: boolean;
 }
 
-const locales = {
-  en: {
-    pageTitle: 'Create Market',
-    notConnected: 'Please connect wallet first',
-    marketTitleLabel: 'Market Question',
-    marketTitlePlaceholder: 'Will ETH exceed $10000 by end of 2026? (YES/NO only)',
-    categoryLabel: 'Category',
-    categoryOpts: ['Crypto', 'Sports', 'Tech', 'Politics', 'Others'],
-    settlementTimeLabel: 'Settlement Time',
-    sourceUrlLabel: 'Result Source URL',
-    sourceUrlPlaceholder: 'https://reliable-official-source.com/event-result',
-    initialLiquidityLabel: 'Initial Liquidity (USDC)',
-    initialLiquidityPlaceholder: 'Min 100 USDC',
-    tip1: '⚠️ Creating market requires staking PAULO tokens, you will earn 50% of transaction fees on this market forever.',
-    tip2: '⚠️ All markets must follow local laws, illegal markets will be taken down with penalty staked.',
-    submitBtn: 'Create & Stake',
-    processingText: 'Creating transaction...',
-    successText: 'Market created successfully!',
-    errorTitleRequired: 'Please fill all required fields',
-    errorUrlInvalid: 'Please input valid http/https URL',
-    errorTimeTooEarly: 'Settlement time must be at least 24h later than now',
-  },
-  zh: {
-    pageTitle: '创建预测市场',
-    notConnected: '请先连接钱包',
-    marketTitleLabel: '市场问题标题',
-    marketTitlePlaceholder: 'ETH是否会在2026年底前突破10000美元？（二选一YES/NO问题）',
-    categoryLabel: '分类标签',
-    categoryOpts: ['加密货币', '体育赛事', '科技', '政治', '其他'],
-    settlementTimeLabel: '结算时间',
-    sourceUrlLabel: '结果来源链接',
-    sourceUrlPlaceholder: 'https://权威官方信息来源.com/事件结果',
-    initialLiquidityLabel: '初始流动性注入 (USDC)',
-    initialLiquidityPlaceholder: '最低100 USDC',
-    tip1: '⚠️ 创建市场需要质押PAULO代币，你将永久获得该市场50%的交易手续费分成收益。',
-    tip2: '⚠️ 所有市场必须遵守当地法律法规，违规市场将被下架并扣除惩罚性质押金。',
-    submitBtn: '提交创建并质押',
-    processingText: '交易上链中...',
-    successText: '市场创建成功！',
-    errorTitleRequired: '请填写所有必填字段',
-    errorUrlInvalid: '请输入合法的http/https链接',
-    errorTimeTooEarly: '结算时间必须至少晚于当前时间24小时',
-  },
+const t = (lang: 'en' | 'zh') => lang === 'en' ? {
+  title: 'Create Market',
+  notConnected: 'Please connect wallet first',
+  question: 'Market Question',
+  questionPlaceholder: 'Will ETH exceed $10000 by end of 2026?',
+  category: 'Category',
+  categories: ['Crypto', 'Sports', 'Tech', 'Politics', 'Others'],
+  settlement: 'Settlement Time',
+  sourceUrl: 'Result Source URL',
+  sourceUrlPlaceholder: 'https://official-source.com/result',
+  liquidity: 'Initial Liquidity (USDC)',
+  liquidityPlaceholder: 'Min 100 USDC',
+  tip: 'Creating a market requires staking PAULO tokens. You will earn 50% of all trading fees on this market forever.',
+  tip2: 'All markets must comply with local laws. Illegal markets will be removed and stake forfeited.',
+  submit: 'Create Market',
+  processing: 'Creating...',
+  success: 'Market created!',
+  errorRequired: 'Please fill all required fields',
+  errorUrl: 'Invalid URL format',
+  errorTime: 'Settlement time must be at least 24h from now',
+} : {
+  title: '创建市场',
+  notConnected: '请先连接钱包',
+  question: '市场问题',
+  questionPlaceholder: 'ETH 是否会在 2026 年底前突破 $10000？',
+  category: '分类',
+  categories: ['加密货币', '体育', '科技', '政治', '其他'],
+  settlement: '结算时间',
+  sourceUrl: '结果来源链接',
+  sourceUrlPlaceholder: 'https://官方来源.com/结果',
+  liquidity: '初始流动性 (USDC)',
+  liquidityPlaceholder: '最少 100 USDC',
+  tip: '创建市场需要质押 PAULO 代币。您将永久获得该市场 50% 的交易手续费。',
+  tip2: '所有市场必须遵守当地法律。违规市场将被下架并没收质押金。',
+  submit: '创建市场',
+  processing: '创建中...',
+  success: '市场创建成功！',
+  errorRequired: '请填写所有必填项',
+  errorUrl: '链接格式不正确',
+  errorTime: '结算时间必须距现在至少 24 小时',
 };
 
 const CreateMarket: React.FC<PageProps> = ({ lang, walletConnected = true }) => {
-  const t = locales[lang];
+  const texts = t(lang);
   const [form, setForm] = useState({
     title: '',
     categoryIndex: 0,
@@ -63,16 +61,16 @@ const CreateMarket: React.FC<PageProps> = ({ lang, walletConnected = true }) => 
 
   const validate = () => {
     if (!form.title || !form.settlementDatetime || !form.sourceUrl || !form.initialLiquidity) {
-      setMsg(t.errorTitleRequired);
+      setMsg(texts.errorRequired);
       return false;
     }
     if (!/^https?:\/\//.test(form.sourceUrl)) {
-      setMsg(t.errorUrlInvalid);
+      setMsg(texts.errorUrl);
       return false;
     }
     const settleTs = new Date(form.settlementDatetime).getTime() / 1000;
-    if (settleTs < Date.now()/1000 + 86400) {
-      setMsg(t.errorTimeTooEarly);
+    if (settleTs < Date.now() / 1000 + 86400) {
+      setMsg(texts.errorTime);
       return false;
     }
     return true;
@@ -82,10 +80,9 @@ const CreateMarket: React.FC<PageProps> = ({ lang, walletConnected = true }) => 
     if (!validate()) return;
     setMsg('');
     setIsSubmitting(true);
-    // 模拟链上交易流程
     setTimeout(() => {
       setIsSubmitting(false);
-      setMsg(t.successText);
+      setMsg(texts.success);
     }, 3000);
   };
 
@@ -93,155 +90,155 @@ const CreateMarket: React.FC<PageProps> = ({ lang, walletConnected = true }) => 
     return (
       <div className="page-container" style={{ paddingTop: 60, textAlign: 'center' }}>
         <div style={{ fontSize: 60, marginBottom: 24 }}>🔌</div>
-        <p style={{ fontSize: 18, fontWeight: 700 }}>{t.notConnected}</p>
+        <p style={{ fontSize: 18, fontWeight: 700 }}>{texts.notConnected}</p>
       </div>
     );
   }
 
-  return (
-    <div className="page-container">
-      <h1 className="page-title">{t.pageTitle}</h1>
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '14px 16px',
+    borderRadius: 12,
+    border: '1px solid #e5e7eb',
+    fontSize: 15,
+    outline: 'none',
+    color: '#111827',
+    backgroundColor: '#ffffff',
+  };
 
+  return (
+    <div className="page-container" style={{ paddingTop: 8, textAlign: 'left' }}>
+      {/* 页面标题 — 简洁 */
+      }<div style={{ fontSize: 20, fontWeight: 800, color: '#111827', marginBottom: 20 }}>
+        {texts.title}
+      </div>
+
+      {/* 市场问题 */}
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 8 }}>
+          {texts.question}
+        </label>
+        <input
+          style={inputStyle}
+          placeholder={texts.questionPlaceholder}
+          value={form.title}
+          onChange={e => setForm({ ...form, title: e.target.value })}
+        />
+      </div>
+
+      {/* 分类标签 */}
+      <div style={{ marginBottom: 16, textAlign: 'left' }}>
+        <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 8 }}>
+          {texts.category}
+        </label>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {texts.categories.map((cat, idx) => (
+            <button
+              key={idx}
+              onClick={() => setForm({ ...form, categoryIndex: idx })}
+              style={{
+                padding: '8px 16px',
+                borderRadius: 10,
+                border: form.categoryIndex === idx ? '2px solid #111827' : '1px solid #e5e7eb',
+                backgroundColor: form.categoryIndex === idx ? '#111827' : 'transparent',
+                color: form.categoryIndex === idx ? '#ffffff' : '#6b7280',
+                fontWeight: 700,
+                fontSize: 13,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 结算时间 */}
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 8 }}>
+          {texts.settlement}
+        </label>
+        <input
+          type="datetime-local"
+          style={inputStyle}
+          value={form.settlementDatetime}
+          onChange={e => setForm({ ...form, settlementDatetime: e.target.value })}
+        />
+      </div>
+
+      {/* 来源链接 */}
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 8 }}>
+          {texts.sourceUrl}
+        </label>
+        <input
+          style={inputStyle}
+          placeholder={texts.sourceUrlPlaceholder}
+          value={form.sourceUrl}
+          onChange={e => setForm({ ...form, sourceUrl: e.target.value })}
+        />
+      </div>
+
+      {/* 初始流动性 */}
+      <div style={{ marginBottom: 20 }}>
+        <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 8 }}>
+          {texts.liquidity}
+        </label>
+        <input
+          type="number"
+          style={inputStyle}
+          placeholder={texts.liquidityPlaceholder}
+          value={form.initialLiquidity}
+          onChange={e => setForm({ ...form, initialLiquidity: e.target.value })}
+        />
+      </div>
+
+      {/* 提示信息 */}
       <div style={{
-        backgroundColor: '#fff',
-        borderRadius: 16,
-        padding: 20,
-        boxShadow: '0 2px 12px rgba(0,0,0,0.04)',
+        backgroundColor: '#f9fafb',
+        borderRadius: 12,
+        padding: '14px 16px',
         marginBottom: 20,
       }}>
-        {/* 标题输入 */}
-        <div style={{ marginBottom: 18 }}>
-          <label style={{ display: 'block', fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#222' }}>{t.marketTitleLabel}</label>
-          <input
-            style={{
-              width: '100%',
-              padding: '14px 16px',
-              borderRadius: 10,
-              border: '1px solid #e5e7eb',
-              fontSize: 15,
-              outline: 'none',
-            }}
-            placeholder={t.marketTitlePlaceholder}
-            value={form.title}
-            onChange={e => setForm({...form, title: e.target.value})}
-          />
-        </div>
-
-        {/* 分类选择 */}
-        <div style={{ marginBottom: 18 }}>
-          <label style={{ display: 'block', fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#222' }}>{t.categoryLabel}</label>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {t.categoryOpts.map((cat, idx) => (
-              <div
-                key={idx}
-                onClick={() => setForm({...form, categoryIndex: idx})}
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: 8,
-                  fontSize: 14,
-                  fontWeight: form.categoryIndex === idx ? 700 : 500,
-                  backgroundColor: form.categoryIndex === idx ? '#ff4d4f' : '#f3f4f6',
-                  color: form.categoryIndex === idx ? 'white' : '#374151',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                {cat}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 结算时间 */}
-        <div style={{ marginBottom: 18 }}>
-          <label style={{ display: 'block', fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#222' }}>{t.settlementTimeLabel}</label>
-          <input
-            type="datetime-local"
-            style={{
-              width: '100%',
-              padding: '14px 16px',
-              borderRadius: 10,
-              border: '1px solid #e5e7eb',
-              fontSize: 15,
-              outline: 'none',
-            }}
-            value={form.settlementDatetime}
-            onChange={e => setForm({...form, settlementDatetime: e.target.value})}
-          />
-        </div>
-
-        {/* 结果来源链接 */}
-        <div style={{ marginBottom: 18 }}>
-          <label style={{ display: 'block', fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#222' }}>{t.sourceUrlLabel}</label>
-          <input
-            style={{
-              width: '100%',
-              padding: '14px 16px',
-              borderRadius: 10,
-              border: '1px solid #e5e7eb',
-              fontSize: 15,
-              outline: 'none',
-            }}
-            placeholder={t.sourceUrlPlaceholder}
-            value={form.sourceUrl}
-            onChange={e => setForm({...form, sourceUrl: e.target.value})}
-          />
-        </div>
-
-        {/* 初始流动性 */}
-        <div style={{ marginBottom: 24 }}>
-          <label style={{ display: 'block', fontSize: 14, fontWeight: 600, marginBottom: 8, color: '#222' }}>{t.initialLiquidityLabel}</label>
-          <input
-            style={{
-              width: '100%',
-              padding: '14px 16px',
-              borderRadius: 10,
-              border: '1px solid #e5e7eb',
-              fontSize: 15,
-              outline: 'none',
-            }}
-            type="number"
-            placeholder={t.initialLiquidityPlaceholder}
-            value={form.initialLiquidity}
-            onChange={e => setForm({...form, initialLiquidity: e.target.value})}
-          />
-        </div>
-
-        {/* 提示区域 */}
-        <div style={{ backgroundColor: '#fffbeb', borderRadius: 10, padding: 14, marginBottom: 20 }}>
-          <p style={{ fontSize: 13, color: '#92400e', margin: '0 0 10px 0', lineHeight: 1.5 }}>{t.tip1}</p>
-          <p style={{ fontSize: 13, color: '#92400e', margin: 0, lineHeight: 1.5 }}>{t.tip2}</p>
-        </div>
-
-        {/* 错误/成功提示 */}
-        {msg && (
-          <p style={{
-            textAlign: 'center',
-            color: msg.includes('success') || msg.includes('成功') ? '#10b981' : '#ef4444',
-            fontWeight: 600,
-            marginBottom: 16,
-          }}>{msg}</p>
-        )}
-
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          style={{
-            width: '100%',
-            padding: '15px 0',
-            borderRadius: 12,
-            backgroundColor: '#ff4d4f',
-            color: 'white',
-            fontSize: 16,
-            fontWeight: 700,
-            border: 'none',
-            opacity: isSubmitting ? 0.7 : 1,
-            cursor: isSubmitting ? 'not-allowed' : 'pointer',
-          }}
-        >
-          {isSubmitting ? t.processingText : t.submitBtn}
-        </button>
+        <p style={{ fontSize: 12, color: '#6b7280', margin: '0 0 8px 0', lineHeight: 1.6, textAlign: 'left' }}>
+          {texts.tip}
+        </p>
+        <p style={{ fontSize: 12, color: '#6b7280', margin: 0, lineHeight: 1.6, textAlign: 'left' }}>
+          {texts.tip2}
+        </p>
       </div>
+
+      {/* 状态消息 */}
+      {msg && (
+        <p style={{
+          textAlign: 'center',
+          fontSize: 14,
+          fontWeight: 600,
+          color: msg.includes('success') || msg.includes('成功') ? '#16a34a' : '#ef4444',
+          marginBottom: 16,
+        }}>{msg}</p>
+      )}
+
+      {/* 提交按钮 */}
+      <button
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+        style={{
+          width: '100%',
+          padding: '16px 0',
+          borderRadius: 12,
+          backgroundColor: isSubmitting ? '#9ca3af' : '#111827',
+          color: '#ffffff',
+          fontSize: 16,
+          fontWeight: 700,
+          border: 'none',
+          cursor: isSubmitting ? 'not-allowed' : 'pointer',
+          transition: 'all 0.15s ease',
+        }}
+      >
+        {isSubmitting ? texts.processing : texts.submit}
+      </button>
     </div>
   );
 };

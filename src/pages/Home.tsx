@@ -1,4 +1,5 @@
 import React from 'react';
+import BetModal from '../components/BetModal';
 interface PageProps {
   lang: 'en' | 'zh';
 }
@@ -351,6 +352,10 @@ const Home: React.FC<PageProps & { onMarketClick: (market: MarketItem) => void }
     markets.filter(m => m.isBookmarked).map(m => m.id)
   );
   const [activeTab, setActiveTab] = React.useState(0);
+  // 下注弹窗状态
+  const [betModalVisible, setBetModalVisible] = React.useState(false);
+  const [betSelectedSide, setBetSelectedSide] = React.useState<'yes' | 'no' | null>(null);
+  const [betTargetMarket, setBetTargetMarket] = React.useState<MarketItem | null>(null);
 
   const tabs = lang === 'en'
     ? ['Hot', 'World Cup 2026', 'Bundesliga', 'Serie A']
@@ -495,6 +500,7 @@ const Home: React.FC<PageProps & { onMarketClick: (market: MarketItem) => void }
             {/* Yes / No 按钮区域 */}
             <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
               <button
+                onClick={(e) => { e.stopPropagation(); setBetTargetMarket(market); setBetSelectedSide('yes'); setBetModalVisible(true); }}
                 style={{
                   flex: 1,
                   backgroundColor: '#dcfce7',
@@ -513,6 +519,7 @@ const Home: React.FC<PageProps & { onMarketClick: (market: MarketItem) => void }
                 {lang === 'en' ? 'Yes' : '是'}
               </button>
               <button
+                onClick={(e) => { e.stopPropagation(); setBetTargetMarket(market); setBetSelectedSide('no'); setBetModalVisible(true); }}
                 style={{
                   flex: 1,
                   backgroundColor: '#fee2e2',
@@ -556,6 +563,18 @@ const Home: React.FC<PageProps & { onMarketClick: (market: MarketItem) => void }
           </div>
         ))}
       </div>
+
+      {/* 下注弹窗 */}
+      <BetModal
+        visible={betModalVisible}
+        market={betTargetMarket}
+        selectedSide={betSelectedSide}
+        userBalance={100}
+        onClose={() => setBetModalVisible(false)}
+        onSelectSide={(side) => setBetSelectedSide(side)}
+        onBet={(amount: number) => { console.log('Bet:', amount, betSelectedSide, betTargetMarket?.id); setBetModalVisible(false); }}
+        lang={lang}
+      />
     </div>
   );
 };
