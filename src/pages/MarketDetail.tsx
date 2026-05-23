@@ -433,6 +433,7 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
   // 下注弹窗状态
   const [betModalVisible, setBetModalVisible] = useState(false);
   const [betSelectedSide, setBetSelectedSide] = useState<'yes' | 'no' | null>(null);
+  const [positionSide, setPositionSide] = useState<'yes' | 'no'>('yes');
 
   // 评论回复状态
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
@@ -839,125 +840,111 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
       {/* 持仓 Tab */}
       {activeTab === 'positions' && (
         <div style={{ width: '100%', overflow: 'hidden' }}>
-          {/* YES 持仓列表 */}
-          <div style={{ width: '100%', overflow: 'hidden', marginBottom: 16 }}>
-            <h3 style={{
-              fontSize: 16,
-              fontWeight: 700,
-              color: '#16a34a',
-              marginBottom: 14,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-            }}>
-              <span style={{
-                display: 'inline-block',
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                backgroundColor: '#16a34a',
-              }} />
+          {/* YES / NO 切换按钮 */}
+          <div style={{
+            display: 'flex',
+            marginBottom: 14,
+          }}>
+            <button
+              onClick={() => setPositionSide('yes')}
+              style={{
+                flex: 1,
+                padding: '10px 0',
+                border: 'none',
+                backgroundColor: positionSide === 'yes' ? '#dcfce7' : 'transparent',
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: positionSide === 'yes' ? 700 : 500,
+                color: positionSide === 'yes' ? '#16a34a' : '#9ca3af',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
               {t.yesHolders}
-            </h3>
-            {/* 表头 */}
-            <div style={{
-              display: 'flex',
-              padding: '6px 0',
-              borderBottom: '1px solid #f3f4f6',
-              marginBottom: 8,
-              fontSize: 12,
-              color: '#9ca3af',
-              fontWeight: 600,
-            }}>
-              <span style={{ width: 40 }}>#</span>
-              <span style={{ flex: 1 }}>{t.address}</span>
-              <span style={{ width: 100, textAlign: 'right' }}>{t.amount}</span>
-              <span style={{ width: 60, textAlign: 'right' }}>{t.share}</span>
-            </div>
-            {mockYesPositions.map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '10px 0',
-                  borderBottom: idx < mockYesPositions.length - 1 ? '1px solid #f9fafb' : 'none',
-                  fontSize: 14,
-                }}
-              >
-                <span style={{ width: 40, color: '#9ca3af', fontWeight: 600 }}>{idx + 1}</span>
-                <span style={{ flex: 1, color: '#374151', fontWeight: 600, fontFamily: 'monospace', fontSize: 13 }}>
-                  {item.address}
-                </span>
-                <span style={{ width: 100, textAlign: 'right', color: '#111827', fontWeight: 700 }}>
-                  {item.amount}
-                </span>
-                <span style={{ width: 60, textAlign: 'right', color: '#6b7280', fontWeight: 500 }}>
-                  {item.sharePct}
-                </span>
-              </div>
-            ))}
+            </button>
+            <button
+              onClick={() => setPositionSide('no')}
+              style={{
+                flex: 1,
+                padding: '10px 0',
+                border: 'none',
+                backgroundColor: positionSide === 'no' ? '#fee2e2' : 'transparent',
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: positionSide === 'no' ? 700 : 500,
+                color: positionSide === 'no' ? '#dc2626' : '#9ca3af',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {t.noHolders}
+            </button>
           </div>
 
-          {/* NO 持仓列表 */}
-          <div style={{ width: '100%', overflow: 'hidden' }}>
-            <h3 style={{
-              fontSize: 16,
-              fontWeight: 700,
-              color: '#dc2626',
-              marginBottom: 14,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-            }}>
-              <span style={{
-                display: 'inline-block',
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                backgroundColor: '#dc2626',
-              }} />
-              {t.noHolders}
-            </h3>
-            {/* 表头 */}
-            <div style={{
-              display: 'flex',
-              padding: '6px 0',
-              borderBottom: '1px solid #f3f4f6',
-              marginBottom: 8,
-              fontSize: 12,
-              color: '#9ca3af',
-              fontWeight: 600,
-            }}>
-              <span style={{ width: 40 }}>#</span>
-              <span style={{ flex: 1 }}>{t.address}</span>
-              <span style={{ width: 100, textAlign: 'right' }}>{t.amount}</span>
-              <span style={{ width: 60, textAlign: 'right' }}>{t.share}</span>
-            </div>
-            {mockNoPositions.map((item, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '10px 0',
-                  borderBottom: idx < mockNoPositions.length - 1 ? '1px solid #f9fafb' : 'none',
-                  fontSize: 14,
-                }}
-              >
-                <span style={{ width: 40, color: '#9ca3af', fontWeight: 600 }}>{idx + 1}</span>
-                <span style={{ flex: 1, color: '#374151', fontWeight: 600, fontFamily: 'monospace', fontSize: 13 }}>
-                  {item.address}
-                </span>
-                <span style={{ width: 100, textAlign: 'right', color: '#111827', fontWeight: 700 }}>
-                  {item.amount}
-                </span>
-                <span style={{ width: 60, textAlign: 'right', color: '#6b7280', fontWeight: 500 }}>
-                  {item.sharePct}
-                </span>
-              </div>
-            ))}
+          {/* 表头 */}
+          <div style={{
+            display: 'flex',
+            padding: '6px 0',
+            marginBottom: 8,
+            fontSize: 12,
+            color: '#9ca3af',
+            fontWeight: 600,
+          }}>
+            <span style={{ width: 40 }}>#</span>
+            <span style={{ flex: 1 }}>{t.address}</span>
+            <span style={{ width: 100, textAlign: 'right' }}>{t.amount}</span>
+            <span style={{ width: 60, textAlign: 'right' }}>{t.share}</span>
           </div>
+
+          {/* YES 列表 */}
+          {positionSide === 'yes' && mockYesPositions.map((item, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '10px 0',
+                borderBottom: idx < mockYesPositions.length - 1 ? '1px solid #f9fafb' : 'none',
+                fontSize: 14,
+              }}
+            >
+              <span style={{ width: 40, color: '#9ca3af', fontWeight: 600 }}>{idx + 1}</span>
+              <span style={{ flex: 1, color: '#374151', fontWeight: 600, fontFamily: 'monospace', fontSize: 13 }}>
+                {item.address}
+              </span>
+              <span style={{ width: 100, textAlign: 'right', color: '#111827', fontWeight: 700 }}>
+                {item.amount}
+              </span>
+              <span style={{ width: 60, textAlign: 'right', color: '#6b7280', fontWeight: 500 }}>
+                {item.sharePct}
+              </span>
+            </div>
+          ))}
+
+          {/* NO 列表 */}
+          {positionSide === 'no' && mockNoPositions.map((item, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '10px 0',
+                borderBottom: idx < mockNoPositions.length - 1 ? '1px solid #f9fafb' : 'none',
+                fontSize: 14,
+              }}
+            >
+              <span style={{ width: 40, color: '#9ca3af', fontWeight: 600 }}>{idx + 1}</span>
+              <span style={{ flex: 1, color: '#374151', fontWeight: 600, fontFamily: 'monospace', fontSize: 13 }}>
+                {item.address}
+              </span>
+              <span style={{ width: 100, textAlign: 'right', color: '#111827', fontWeight: 700 }}>
+                {item.amount}
+              </span>
+              <span style={{ width: 60, textAlign: 'right', color: '#6b7280', fontWeight: 500 }}>
+                {item.sharePct}
+              </span>
+            </div>
+          ))}
         </div>
       )}
 

@@ -149,22 +149,27 @@ const App: React.FC = () => {
             <span className="site-name">{t.siteTitle}</span>
           </div>
           <div className="header-right">
-            {/* PAULO Bridge同款多语言下拉菜单 */}
+            {/* 多语言切换 — 对齐底部导航栏样式 */}
             <div className="relative" style={{ position: 'relative' }}>
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
                 style={{
-                  padding: '8px 12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 4,
                   border: 'none',
                   backgroundColor: 'transparent',
-                  borderRadius: 8,
-                  color: '#6b7280',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  color: langDropdownOpen ? '#ff4d4f' : '#b8add2',
                 }}
               >
-                🌐 <span className="hidden sm:inline">{currentLangInfo.name}</span>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="2" y1="12" x2="22" y2="12"/>
+                  <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                </svg>
               </button>
 
               {langDropdownOpen && (
@@ -190,7 +195,7 @@ const App: React.FC = () => {
                         border: 'none',
                         backgroundColor: 'transparent',
                         textAlign: 'left',
-                        color: locale.code === currentLang ? '#111827' : '#71717a',
+                        color: locale.code === currentLang ? '#ff4d4f' : '#71717a',
                         fontSize: 14,
                         fontWeight: locale.code === currentLang ? 700 : 500,
                         cursor: 'pointer'

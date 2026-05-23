@@ -49,7 +49,8 @@ const t = (lang: 'en' | 'zh') => lang === 'en' ? {
   currentPrice: 'Current',
   pnlLabel: 'PnL',
   btnClaim: 'Claim',
-  btnClose: 'Close',
+  btnClose: 'Sell',
+  btnArbitrate: 'Request Arbitration',
   sideYes: 'YES',
   sideNo: 'NO',
   noPositions: 'No positions',
@@ -71,7 +72,8 @@ const t = (lang: 'en' | 'zh') => lang === 'en' ? {
   currentPrice: '当前',
   pnlLabel: '盈亏',
   btnClaim: '领取',
-  btnClose: '平仓',
+  btnClose: '出售',
+  btnArbitrate: '申请仲裁',
   sideYes: 'YES',
   sideNo: 'NO',
   noPositions: '暂无持仓',
@@ -324,7 +326,7 @@ const Profile: React.FC<PageProps> = ({ lang, walletConnected = true }) => {
                 <div style={{ fontSize:13, fontWeight:700 }}>${pos.principal}</div>
               </div>
             </div>
-            {(pos.canCloseEarly || pos.status==='pending_claim') && (
+            {(pos.canCloseEarly || pos.status==='pending_claim' || pos.status==='settled') && (
               <div style={{ display: 'flex', gap: 8 }}>
                 {pos.canCloseEarly && (
                   <button style={{
@@ -337,6 +339,12 @@ const Profile: React.FC<PageProps> = ({ lang, walletConnected = true }) => {
                     flex:1, padding:'10px 0', borderRadius:8, border:'none',
                     backgroundColor:'#111827', color:'#fff', fontSize:13, fontWeight:700, cursor:'pointer',
                   }}>{texts.btnClaim}</button>
+                )}
+                {pos.status==='settled' && (
+                  <button style={{
+                    flex:1, padding:'10px 0', borderRadius:8, border:'1px solid #f59e0b',
+                    backgroundColor:'#fffbeb', color:'#92400e', fontSize:13, fontWeight:700, cursor:'pointer',
+                  }}>{texts.btnArbitrate}</button>
                 )}
               </div>
             )}
