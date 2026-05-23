@@ -62,7 +62,7 @@ const t = (lang: 'en' | 'zh') => lang === 'en' ? {
   next: '下一页',
 };
 
-const Search: React.FC<PageProps> = ({ lang }) => {
+const Team: React.FC<PageProps> = ({ lang }) => {
   const texts = t(lang);
   const [copied, setCopied] = useState(false);
   const [page, setPage] = useState(1);
@@ -281,4 +281,4 @@ const Search: React.FC<PageProps> = ({ lang }) => {
   );
 };
 
-export default Search;
+export default Team;

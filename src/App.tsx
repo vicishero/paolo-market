@@ -5,7 +5,7 @@ import { I18nContext, LangCode } from './i18n';
 import './App.css';
 // 页面组件
 import Home from './pages/Home';
-import Search from './pages/Search';
+import Team from './pages/Team';
 import Ranking from './pages/Ranking';
 import Profile from './pages/Profile';
 import CreateMarket from './pages/CreateMarket';
@@ -126,7 +126,7 @@ const App: React.FC = () => {
   const renderPage = () => {
     switch (currentPage) {
       case 'home': return <Home lang={currentLang} onMarketClick={handleMarketClick} />;
-      case 'search': return <Search lang={currentLang} />;
+      case 'search': return <Team lang={currentLang} />;
       case 'ranking': return <Ranking lang={currentLang} />;
       case 'create': return <CreateMarket lang={currentLang} walletConnected={account.isConnected} />;
       case 'profile': return <Profile lang={currentLang} walletConnected={account.isConnected} />;
