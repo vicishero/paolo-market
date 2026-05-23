@@ -285,8 +285,10 @@ const Profile: React.FC<PageProps> = ({ lang, walletConnected = true }) => {
           <div
             key={pos.id}
             style={{
-              borderBottom: '1px solid #f3f4f6',
-              padding: '14px 0',
+              backgroundColor: '#f9fafb',
+              borderRadius: 12,
+              padding: '14px 16px',
+              marginBottom: 10,
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>

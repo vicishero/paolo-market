@@ -840,7 +840,7 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
       {activeTab === 'positions' && (
         <div style={{ width: '100%', overflow: 'hidden' }}>
           {/* YES 持仓列表 */}
-          <div style={{ marginBottom: 16 }}>
+          <div style={{ width: '100%', overflow: 'hidden', marginBottom: 16 }}>
             <h3 style={{
               fontSize: 16,
               fontWeight: 700,
@@ -900,7 +900,7 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
           </div>
 
           {/* NO 持仓列表 */}
-          <div>
+          <div style={{ width: '100%', overflow: 'hidden' }}>
             <h3 style={{
               fontSize: 16,
               fontWeight: 700,

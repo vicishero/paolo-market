@@ -164,7 +164,7 @@ const Ranking: React.FC<PageProps> = ({ lang }) => {
             }}
           >
             {/* 排名 */}
-            <span style={{ width: 32 }}>
+            <span style={{ width: 32, flexShrink: 0 }}>
               <span style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -185,7 +185,6 @@ const Ranking: React.FC<PageProps> = ({ lang }) => {
             <span style={{
               flex: 1,
               minWidth: 0,
-              maxWidth: 120,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
