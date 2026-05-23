@@ -617,21 +617,6 @@ const MarketDetail: React.FC<PageProps> = ({ lang, market, onBack }) => {
         boxShadow: '0 1px 8px rgba(0,0,0,0.04)',
         textAlign: 'left',
       }}>
-        {/* 分类标签 */}
-        <div style={{ marginBottom: 16 }}>
-          <span style={{
-            display: 'inline-block',
-            padding: '4px 12px',
-            borderRadius: 6,
-            backgroundColor: '#f0f0ff',
-            color: '#2563eb',
-            fontSize: 12,
-            fontWeight: 700,
-          }}>
-            {category[lang]}
-          </span>
-        </div>
-
         {/* 图标 + 标题 */}
         <div style={{ display: 'flex', gap: 14, marginBottom: 20, alignItems: 'flex-start' }}>
           <div style={{
